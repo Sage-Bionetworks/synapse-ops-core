@@ -32,4 +32,3 @@ Settings > Actions > Runners > New Self-Hosted Runner, then scroll down to "Conf
 `instance_type` is the EC2 instance type for the self-hosted runner, e.g. `t4g.small`
 
 `number_of_runners` is the number of GitHub runners to start on the EC2 instance
-

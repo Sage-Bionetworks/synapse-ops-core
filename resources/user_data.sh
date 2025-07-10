@@ -45,19 +45,19 @@ cd ~github_runner/actions-runner
 su -c "curl -o ./actions-runner-linux-arm64-2.324.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.324.0/actions-runner-linux-arm64-2.324.0.tar.gz" github_runner
 
 for runner_name in {runner_name_list}; do
-	# Create the runner and start the configuration experience
-	# make a unique dir and untar into it
-	su -c "mkdir ~/actions-runner/${runner_name}" github_runner
-	# Here we 'cd' as root so that all the 'su'-based commands execute in the correct directory
-	cd ~github_runner/actions-runner/${runner_name}	
-	# Extract the installer into the runner-specific sub-directory
-	su -c "tar xzf ../actions-runner-linux-arm64-2.324.0.tar.gz" github_runner
-	su -c "./config.sh --unattended --replace --url {github_repo_url} --token {github_runner_token} --name `hostname`_${runner_name} --labels {runner_label}" github_runner
-	# from https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service
-	# Install the service with the following command:
-	./svc.sh install github_runner
-	# Start the service with the following command:
-	./svc.sh start
+    # Create the runner and start the configuration experience
+    # make a unique dir and untar into it
+    su -c "mkdir ~/actions-runner/${runner_name}" github_runner
+    # Here we 'cd' as root so that all the 'su'-based commands execute in the correct directory
+    cd ~github_runner/actions-runner/${runner_name}
+    # Extract the installer into the runner-specific sub-directory
+    su -c "tar xzf ../actions-runner-linux-arm64-2.324.0.tar.gz" github_runner
+    su -c "./config.sh --unattended --replace --url {github_repo_url} --token {github_runner_token} --name `hostname`_${runner_name} --labels {runner_label}" github_runner
+    # from https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service
+    # Install the service with the following command:
+    ./svc.sh install github_runner
+    # Start the service with the following command:
+    ./svc.sh start
 done
 
 echo User-data script completed.

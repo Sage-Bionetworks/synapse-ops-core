@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build and run 
+# Build and run
 #
 
 set +x
@@ -20,7 +20,7 @@ mvn clean install
 
 CMD_PROPS=" -Dorg.sagebionetworks.stack=${STACK}"
 CMD_PROPS+=" -Dorg.sagebionetworks.lambda.markdownit.release.version=${RELEASE_VERSION}"
-export ${CMD_PROPS} 
+export ${CMD_PROPS}
 
 echo ${CMD_PROPS}
 

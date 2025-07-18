@@ -9,7 +9,7 @@ on:
         type: string
         description: dev or prod
       RELEASE_VERSION:
-        required:true
+        required: true
         type: string
         description: artifact version in Github
 

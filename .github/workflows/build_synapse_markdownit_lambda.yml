@@ -63,7 +63,7 @@ jobs:
 
       - name: Execute script
         run: >
-          ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_bind_nlb_to_alb.sh
+          ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_markdownit-lambda.sh
           ${{ inputs.STACK }}
           ${{ inputs.RELEASE_VERSION }}
           ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}

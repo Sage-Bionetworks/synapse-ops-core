@@ -8,6 +8,10 @@ on:
         required: true
         type: string
         description: dev or prod
+      INSTANCE_ALIAS:
+        required: true
+        type: string
+        description: prod or staging or tst
 
 env:
    RUNNER_LABEL: deployment-runner
@@ -61,5 +65,6 @@ jobs:
         run: >
           ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_cdn_webacl.sh
           ${{ inputs.STACK }}
+          ${{ inputs.INSTANCE_ALIAS }}
           ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 ...

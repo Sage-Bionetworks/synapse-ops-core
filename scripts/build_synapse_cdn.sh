@@ -1,13 +1,14 @@
 #!/bin/bash
 #
-# Build Synapse CDN WebACLs
+# Build Synapse CDN
 #
 
 set +x
 
-# dev, staging or prod
+# dev or prod
 STACK=${1}
-SUBDOMAIN=${2}
+# prod, staging or tst
+INSTANCE_ALIAS=${2}
 CERTIFICATE_ARN=${3}
 
 # Folder containing source code
@@ -18,7 +19,7 @@ cd $SRC_PATH
 mvn clean install
 
 CMD_PROPS=" -Dorg.sagebionetworks.stack=${STACK}"
-CMD_PROPS+=" -Dorg.sagebionetworks.stack.instance.alias=${SUBDOMAIN}"
+CMD_PROPS+=" -Dorg.sagebionetworks.stack.instance.alias=${INSTANCE_ALIAS}"
 CMD_PROPS+=" -Dorg.sagebionetworks.beanstalk.ssl.arn.portal=${CERTIFICATE_ARN}"
 export $CMD_PROPS
 

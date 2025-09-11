@@ -26,6 +26,9 @@ PORTAL_BEANSTALK_VERSION=${6}
 # example Blue
 VPC_SUBNET_COLOR=${7}
 
+# example 5.5.0
+BEANSTALK_PLATFORM_VERSION=${8}
+
 # Folder containing source code
 SRC_PATH=${8}
 
@@ -50,7 +53,7 @@ CMD_PROPS+=" -Dorg.sagebionetworks.tables.rds.instance.count=1"
 CMD_PROPS+=" -Dorg.sagebionetworks.tables.rds.storage.type=gp3"
 CMD_PROPS+=" -Dorg.sagebionetworks.tables.rds.iops=-1"
 CMD_PROPS+=" -Dorg.sagebionetworks.beanstalk.number.workers=0"
-CMD_PROPS+=" -Dorg.sagebionetworks.beanstalk.image.version.amazonlinux=5.7.4"
+CMD_PROPS+=" -Dorg.sagebionetworks.beanstalk.image.version.amazonlinux=$BEANSTALK_PLATFORM_VERSION"
 CMD_PROPS+=" -Dorg.sagebionetworks.docs.deploy=false"
 CMD_PROPS+=" -Dorg.sagebionetworks.docs.source=dev.release.rest.doc.sagebase.org"
 CMD_PROPS+=" -Dorg.sagebionetworks.docs.destination=rest-docs.synapse.org/rest"

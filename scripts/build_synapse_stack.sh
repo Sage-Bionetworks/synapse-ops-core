@@ -30,7 +30,7 @@ VPC_SUBNET_COLOR=${7}
 BEANSTALK_PLATFORM_VERSION=${8}
 
 # Folder containing source code
-SRC_PATH=${8}
+SRC_PATH=${9}
 
 cd $SRC_PATH
 

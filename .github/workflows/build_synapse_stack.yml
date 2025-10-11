@@ -31,6 +31,11 @@ on:
         required: true
         type: string
         description: Red, Green, or Blue
+      BEANSTALK_PLATFORM_VERSION:
+        required: true
+        type: string
+        description: example, 5.5.0
+        default: 5.5.0
 
 
 env:
@@ -91,5 +96,6 @@ jobs:
           ${{ inputs.PORTAL_VERSION }}
           ${{ inputs.PORTAL_BEANSTALK_VERSION }}
           ${{ inputs.VPC_SUBNET_COLOR }}
+          ${{ inputs.BEANSTALK_PLATFORM_VERSION }}
           ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 ...

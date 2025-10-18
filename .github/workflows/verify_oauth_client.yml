@@ -15,37 +15,42 @@ on:
         description: true to verify or false to disable
 
 env:
-   RUNNER_LABEL: shared-runner
+   CODE_PIPELINE_NAME: shared-pipeline
 
 jobs:
-  # this is necessary to make env values available to later jobs
-  get-env:
+  set-up:
     runs-on: ubuntu-latest
     steps:
-       - run: echo "null"
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          PIPELINE_PARAMETERS=\
+          "CommandToExecute=scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }}\
+          Branch=$BRANCH,\
+          RepoOwner=${{ github.repository_owner }},\
+          Repository=Synapse-Stack-Builder"
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
-      RUNNER_LABEL: ${{ env.RUNNER_LABEL }}
+      CODE_PIPELINE_NAME: ${{ env.CODE_PIPELINE_NAME }}
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
 
-  ensure-runner-exists:
-    needs: get-env
-    uses: "./.github/workflows/ensure_runner_exists.yml"
+  invoke_workflow:
+    needs: set-up
+    uses: "./.github/workflows/codepipeline/execute_code_pipeline.yml"
     with:
-      LABEL: ${{ needs.get-env.outputs.RUNNER_LABEL }}
-      CONTEXT: ${{ vars.CONTEXT }}
+      CODE_PIPELINE_CF_TEMPLATE: configuration/build/codepipeline_cf_template.yaml
+      PIPELINE_NAME: ${{ needs.set-up.outputs.CODE_PIPELINE_NAME }}
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
       ROLE_TO_ASSUME: ${{ vars.ROLE_TO_ASSUME }}
     secrets: inherit
-
-  execute-script:
-    needs: [ensure-runner-exists, get-env]
-    runs-on: ${{ needs.get-env.outputs.RUNNER_LABEL }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: Sage-Bionetworks/synapse-ops-core
-          ref: main
-
-      - name: Execute script
-        run: scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }}
+    permissions:
+      # https://graphite.dev/guides/github-actions-permissions
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
 ...

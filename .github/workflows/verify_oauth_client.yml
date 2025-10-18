@@ -29,7 +29,7 @@ jobs:
           "CommandToExecute=scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }}\
           Branch=$BRANCH,\
           RepoOwner=${{ github.repository_owner }},\
-          Repository=Synapse-Stack-Builder"
+          Repository=synapose-ops-core"
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       CODE_PIPELINE_NAME: ${{ env.CODE_PIPELINE_NAME }}

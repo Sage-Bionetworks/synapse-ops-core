@@ -92,12 +92,13 @@ jobs:
         with:
           repository: brucehoff/synapse-ops-core
           ref: PLFM-9242
+          path: ops_base_path
 
       - name: Deploy CodePipeline to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         id: pipeline-deploy
         with:
-          template: ${{ inputs.CODE_PIPELINE_CF_TEMPLATE }}
+          template: ops_base_path/${{ inputs.CODE_PIPELINE_CF_TEMPLATE }}
           name: ${{ inputs.PIPELINE_NAME }}
           capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
           parameter-overrides: ${{ inputs.PIPELINE_PARAMETERS }},GitHubToken=${{ secrets.GITHUB_TOKEN }}

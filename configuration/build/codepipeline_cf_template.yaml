@@ -196,6 +196,7 @@ Resources:
                 - Name: OpsRepoOutput
               Configuration:
                 ProjectName: !Ref CodeBuildProject
+                PrimarySource: OpsRepoSource
                 EnvironmentVariables: !Sub '[{"name":"COMMAND_TO_EXECUTE","type":"PLAINTEXT","value":"${CommandToExecute}"}]'
                 BuildspecOverride: configuration/build/buildspec.yml
   # A CodeBuild project that can be used to run the stack builder or to build the Synapse back-end

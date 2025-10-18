@@ -37,7 +37,7 @@ jobs:
 
   invoke_workflow:
     needs: set-up
-    uses: "./.github/workflows/codepipeline/execute_code_pipeline.yml"
+    uses: "./.github/workflows/execute_code_pipeline.yml"
     with:
       CODE_PIPELINE_CF_TEMPLATE: configuration/build/codepipeline_cf_template.yaml
       PIPELINE_NAME: ${{ needs.set-up.outputs.CODE_PIPELINE_NAME }}

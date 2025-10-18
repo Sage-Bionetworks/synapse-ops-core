@@ -88,6 +88,10 @@ jobs:
       # 'checkout' is required to be able to reference 'CODE_PIPELINE_CF_TEMPLATE' in the next step
       - name: checkout
         uses: actions/checkout@v5
+        # TODO make this generic
+        with:
+          repository: Sage-Bionetworks/synapse-ops-core
+          ref: PLFM-9242
 
       - name: Deploy CodePipeline to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1

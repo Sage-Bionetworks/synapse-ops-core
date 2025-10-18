@@ -1,0 +1,8 @@
+#
+# Buildspec referenced in codepipeline_cf_template.yaml
+#
+version: 0.2
+phases:
+  build:
+    commands: |
+      ${{ COMMAND_TO_EXECUTE }}

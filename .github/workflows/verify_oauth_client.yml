@@ -24,10 +24,10 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          #BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} TODO remove
           PIPELINE_PARAMETERS=\
           "CommandToExecute=scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }},\
-          Branch=$BRANCH,\
+          Branch=PLFM-9242,\
           RepoOwner=${{ github.repository_owner }},\
           Repository=synapse-ops-core"
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT

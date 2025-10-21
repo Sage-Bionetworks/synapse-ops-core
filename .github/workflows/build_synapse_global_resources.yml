@@ -8,6 +8,10 @@ on:
         required: true
         type: string
         description: dev or prod
+      OPS_VPC_EXPORT_PREFIX:
+        required: true
+        type: string
+        description: The prefix used when exporting VPC resources from ops VPC stack
 
 env:
    RUNNER_LABEL: deployment-runner

@@ -61,5 +61,6 @@ jobs:
         run: >
           ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_global_resources.sh
           ${{ inputs.STACK }}
+          ${{ inputs.OPS_VPC_EXPORT_PREFIX}}
           ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 ...

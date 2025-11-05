@@ -1,5 +1,5 @@
 ---
-name: Build Synapse Stack
+name: Deploy Synapse Global Resources
 
 on:
   workflow_call:
@@ -7,36 +7,11 @@ on:
       STACK:
         required: true
         type: string
-        description: staging or prod
-      INSTANCE:
+        description: dev or prod
+      OPS_VPC_EXPORT_PREFIX:
         required: true
         type: string
-        description: example, 544
-      REPO_AND_WORKERS_VERSION:
-        required: true
-        type: string
-      REPO_BEANSTALK_VERSION:
-        required: true
-        type: number
-        description: example, 0
-      PORTAL_VERSION:
-        required: true
-        type: string
-        description: example, 544.0-4-gd18c3167f2
-      PORTAL_BEANSTALK_VERSION:
-        required: true
-        type: number
-        description: example, 0
-      VPC_SUBNET_COLOR:
-        required: true
-        type: string
-        description: Red, Green, or Blue
-      BEANSTALK_PLATFORM_VERSION:
-        required: true
-        type: string
-        description: example, 5.5.0
-        default: 5.5.0
-
+        description: The prefix used when exporting VPC resources from ops VPC stack
 
 env:
    RUNNER_LABEL: deployment-runner
@@ -83,19 +58,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: Sage-Bionetworks/Synapse-Stack-Builder
-          ref: release-${{ inputs.INSTANCE }}
+          ref: develop
           path: ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 
       - name: Execute script
         run: >
-          ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_stack.sh
+          ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/build_synapse_global_resources.sh
           ${{ inputs.STACK }}
-          ${{ inputs.INSTANCE }}
-          ${{ inputs.REPO_AND_WORKERS_VERSION }}
-          ${{ inputs.REPO_BEANSTALK_VERSION }}
-          ${{ inputs.PORTAL_VERSION }}
-          ${{ inputs.PORTAL_BEANSTALK_VERSION }}
-          ${{ inputs.VPC_SUBNET_COLOR }}
-          ${{ inputs.BEANSTALK_PLATFORM_VERSION }}
+          ${{ inputs.OPS_VPC_EXPORT_PREFIX}}
           ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 ...

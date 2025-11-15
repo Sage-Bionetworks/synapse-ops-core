@@ -59,7 +59,7 @@ jobs:
 
   invoke_workflow:
     needs: set-up
-    uses: "./.github/workflows/execute_code_pipeline_TODO_REMOVE_THIS.yml"
+    uses: "./.github/workflows/execute_code_pipeline.yml"
     with:
       # Note the following specifies the repo' that contains the code pipeline definition
       REPOSITORY_NAME: ${{ needs.set-up.outputs.REPO_OWNER_AND_NAME }}

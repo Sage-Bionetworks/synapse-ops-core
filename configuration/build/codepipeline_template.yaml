@@ -24,24 +24,6 @@ Parameters:
     Default: Sage-Bionetworks
     AllowedPattern: ".+"
     ConstraintDescription: Parameter cannot be empty.
-  StackBuilderRepository:
-    Type: String
-    Default: Synapse-Stack-Builder
-    Description: Stack Builder repository name
-    AllowedPattern: ".+"
-    ConstraintDescription: Parameter cannot be empty.
-  StackBuilderBranch:
-    Type: String
-    Default: develop
-    Description: Branch of the StackBuilder repo to build
-    AllowedPattern: ".+"
-    ConstraintDescription: Parameter cannot be empty.
-  StackBuilderRepoOwner:
-    Type: String
-    Default: Sage-Bionetworks
-    Description: Owner of the StackBuilder Repo
-    AllowedPattern: ".+"
-    ConstraintDescription: Parameter cannot be empty.
   GitHubToken:
     Type: String
     Description: Token to authorize GitHub requests
@@ -152,20 +134,6 @@ Resources:
       Stages:
         - Name: CheckoutRepos
           Actions:
-            - Name: CheckoutStackBuilderRepo
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
-                Version: 1
-              OutputArtifacts:
-                - Name: StackBuilderRepoSource
-              Configuration:
-                Owner: !Ref StackBuilderRepoOwner
-                Repo: !Ref StackBuilderRepository
-                Branch: !Ref StackBuilderBranch
-                OAuthToken: !Ref GitHubToken
-                PollForSourceChanges: false # instead we will trigger from GitHub workflow
             - Name: CheckoutOpsRepo
               Namespace: CheckoutOpsRepo
               ActionTypeId:
@@ -190,7 +158,6 @@ Resources:
                 Provider: CodeBuild
                 Version: 1
               InputArtifacts:
-                - Name: StackBuilderRepoSource
                 - Name: OpsRepoSource
               OutputArtifacts:
                 - Name: OpsRepoOutput
@@ -198,8 +165,12 @@ Resources:
                 ProjectName: !Ref CodeBuildProject
                 PrimarySource: OpsRepoSource
                 EnvironmentVariables: !Sub '[{"name":"COMMAND_TO_EXECUTE","type":"PLAINTEXT","value":"${CommandToExecute}"}]'
-                BuildspecOverride: configuration/build/buildspec.yml
-  # A CodeBuild project that can be used to run the stack builder or to build the Synapse back-end
+                BuildspecOverride: |
+                  version: 0.2
+                  phases:
+                    build:
+                      commands: |
+                        ${COMMAND_TO_EXECUTE}
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:

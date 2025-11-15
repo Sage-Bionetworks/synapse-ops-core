@@ -1,8 +1,8 @@
 #
-# Buildspec referenced in codepipeline_cf_template.yaml
+# Placeholder buildspec
+# Pipeline will not run unless buildspec.yml file is found
 #
 version: 0.2
 phases:
   build:
-    commands: |
-      ${COMMAND_TO_EXECUTE}
+    commands: echo Not Used

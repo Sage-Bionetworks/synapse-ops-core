@@ -23,60 +23,38 @@ on:
         description: The maximum number of files to scan in a run
         default: 25000
 
-env:
-   RUNNER_LABEL: deployment-runner
-   INSTANCE_TYPE: t4g.large
-   PATH_TO_SCRIPT: scripts
-   PATH_TO_SOURCE_CODE: src
-
 jobs:
-  # this is necessary to make env values available to later jobs
-  get-env:
+  set-up:
     runs-on: ubuntu-latest
     steps:
-       - run: echo "null"
-    outputs:
-      RUNNER_LABEL: ${{ env.RUNNER_LABEL }}
-      INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}
-      PATH_TO_SCRIPT: ${{ env.PATH_TO_SCRIPT }}
-      PATH_TO_SOURCE_CODE: ${{ env.PATH_TO_SOURCE_CODE }}
-
-  ensure-runner-exists:
-    needs: get-env
-    uses: "./.github/workflows/ensure_runner_exists.yml"
-    with:
-      LABEL: ${{ needs.get-env.outputs.RUNNER_LABEL }}
-      INSTANCE_TYPE: ${{ needs.get-env.outputs.INSTANCE_TYPE }}
-      CONTEXT: ${{ vars.CONTEXT }}
-      ROLE_TO_ASSUME: ${{ vars.ROLE_TO_ASSUME }}
-      SYNAPSE_DEPLOYMENT_ROLE: ${{ vars.SYNAPSE_DEPLOYMENT_ROLE }}
-    secrets: inherit
-
-  execute-script:
-    runs-on: ${{ needs.get-env.outputs.RUNNER_LABEL }}
-    needs: [ensure-runner-exists, get-env]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: Sage-Bionetworks/synapse-ops-core
-          ref: main
-          path: ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: Sage-Bionetworks/Synapse-Stack-Builder
-          ref: develop
-          path: ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
-
-      - name: Execute script
-        run: >
-          ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/file_archival_request.sh
-          ${{ inputs.STACK }}
-          ${{ inputs.STACK_ENDPOINT_SUFFIX }}
-          ${{ inputs.TIMEOUT_MILLIS }}
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          PIPELINE_PARAMETERS=\
+          CommandToExecute=scripts/file_archival_request.sh \
+          ${{ inputs.STACK }} \
+          ${{ inputs.STACK_ENDPOINT_SUFFIX }} \
+          ${{ inputs.TIMEOUT_MILLIS }} \
           ${{ inputs.FILE_COUNT_LIMIT }}
-          ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
+
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
+    outputs:
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
+
+  invoke_pipeline:
+    needs: set-up
+    uses: "./.github/workflows/invoke_code_pipeline.yml"
+    with:
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
+      USE_STACK_BUILDER: true
+    secrets: inherit
+    permissions:
+      # https://graphite.dev/guides/github-actions-permissions
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
 ...

@@ -14,9 +14,6 @@ on:
         default: true
         description: true to verify or false to disable
 
-env:
-   CODE_PIPELINE_NAME: shared-pipeline
-
 jobs:
   set-up:
     runs-on: ubuntu-latest
@@ -24,25 +21,17 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          #BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} TODO remove
           PIPELINE_PARAMETERS=\
-          "CommandToExecute=scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }},\
-          Branch=PLFM-9242,\
-          RepoOwner=${{ github.repository_owner }},\
-          Repository=synapse-ops-core"
+          "CommandToExecute=scripts/verify_oauth_client.sh ${{ inputs.CLIENT_ID }} ${{ inputs.VERIFY_STATUS }} ${{ vars.SYNAPSE_HOST }}"
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
-      CODE_PIPELINE_NAME: ${{ env.CODE_PIPELINE_NAME }}
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
 
-  invoke_workflow:
+  invoke_pipeline:
     needs: set-up
-    uses: "./.github/workflows/execute_code_pipeline.yml"
+    uses: "./.github/workflows/invoke_code_pipeline.yml"
     with:
-      CODE_PIPELINE_CF_TEMPLATE: configuration/build/codepipeline_cf_template.yaml
-      PIPELINE_NAME: ${{ needs.set-up.outputs.CODE_PIPELINE_NAME }}
       PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
-      ROLE_TO_ASSUME: ${{ vars.ROLE_TO_ASSUME }}
     secrets: inherit
     permissions:
       # https://graphite.dev/guides/github-actions-permissions

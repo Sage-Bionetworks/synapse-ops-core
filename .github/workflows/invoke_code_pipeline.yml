@@ -22,7 +22,8 @@ env:
    REPOSITORY_OWNER: brucehoff
    REPOSITORY_NAME: synapse-ops-core
    REPOSITORY_BRANCH: PLFM-9242
-
+   ACTIONS_RUNNER_DEBUG: true
+   ACTIONS_STEP_DEBUG: true
 jobs:
   set-up:
     runs-on: ubuntu-latest
@@ -59,9 +60,6 @@ jobs:
   invoke_workflow:
     needs: set-up
     uses: "./.github/workflows/execute_code_pipeline.yml"
-    env:
-      ACTIONS_RUNNER_DEBUG: true
-      ACTIONS_STEP_DEBUG: true
     with:
       # Note the following specifies the repo' that contains the code pipeline definition
       REPOSITORY_NAME: ${{ needs.set-up.outputs.REPO_OWNER_AND_NAME }}

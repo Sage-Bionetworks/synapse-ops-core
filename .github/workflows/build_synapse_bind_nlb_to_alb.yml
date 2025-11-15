@@ -45,7 +45,7 @@ jobs:
           ${{ inputs.STACK }} \
           ${{ inputs.REPO_PROD_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_PROD_INSTANCE_AND_VERSION }} \
-          ${{ inputs.REPO_STAGING_INSTANCE_AND_VERSION } \}
+          ${{ inputs.REPO_STAGING_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_STAGING_INSTANCE_AND_VERSION }} \
           ${{ inputs.REPO_TEST_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_TEST_INSTANCE_AND_VERSION }}

@@ -30,13 +30,12 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS=\
-          CommandToExecute=scripts/file_archival_request.sh \
+          PIPELINE_PARAMETERS="\
+          CommandToExecute=\"scripts/file_archival_request.sh \
           ${{ inputs.STACK }} \
           ${{ inputs.STACK_ENDPOINT_SUFFIX }} \
           ${{ inputs.TIMEOUT_MILLIS }} \
-          ${{ inputs.FILE_COUNT_LIMIT }}
-
+          ${{ inputs.FILE_COUNT_LIMIT }}\""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

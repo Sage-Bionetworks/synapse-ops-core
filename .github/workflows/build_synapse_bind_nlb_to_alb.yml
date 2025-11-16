@@ -40,15 +40,15 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS=\
-          CommandToExecute=scripts/build_synapse_bind_nlb_to_alb.sh \
-          ${{ inputs.STACK }} \
+          PIPELINE_PARAMETERS="\
+          CommandToExecute=\"scripts/build_synapse_bind_nlb_to_alb.sh \
+          ${{ inputs.STACK \"}} \
           ${{ inputs.REPO_PROD_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_PROD_INSTANCE_AND_VERSION }} \
           ${{ inputs.REPO_STAGING_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_STAGING_INSTANCE_AND_VERSION }} \
           ${{ inputs.REPO_TEST_INSTANCE_AND_VERSION }} \
-          ${{ inputs.PORTAL_TEST_INSTANCE_AND_VERSION }}
+          ${{ inputs.PORTAL_TEST_INSTANCE_AND_VERSION }}\""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

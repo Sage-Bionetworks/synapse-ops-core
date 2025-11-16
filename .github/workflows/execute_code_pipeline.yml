@@ -48,8 +48,8 @@ on:
         description: GitHub repository where build status is to be published
 
 # let only one invocation of a pipeline run at a time
-#concurrency:
-#  group: ${{ inputs.PIPELINE_NAME }}
+concurrency:
+  group: ${{ inputs.PIPELINE_NAME }}
 
 jobs:
   build_and_test:

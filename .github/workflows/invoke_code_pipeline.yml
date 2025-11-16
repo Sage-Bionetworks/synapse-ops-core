@@ -22,8 +22,6 @@ env:
    REPOSITORY_OWNER: brucehoff
    REPOSITORY_NAME: synapse-ops-core
    REPOSITORY_BRANCH: PLFM-9242
-   ACTIONS_RUNNER_DEBUG: true
-   ACTIONS_STEP_DEBUG: true
 jobs:
   set-up:
     runs-on: ubuntu-latest
@@ -39,7 +37,7 @@ jobs:
 
           # There will be one pipeline for running jobs based on the Stack Builder
           # and one pipeline for running short lived commands.
-          if [[ $USE_STACK_BUILDER == "true" ]]; then
+          if [[ ${{ inputs.USE_STACK_BUILDER }} == "true" ]]; then
             echo "CODE_PIPELINE_NAME=deployment-pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_stack_builder_template.yaml" >> $GITHUB_OUTPUT
             # TODO add StackBuilder Code Pipeline parameters

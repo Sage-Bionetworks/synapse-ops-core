@@ -38,11 +38,11 @@ jobs:
           # There will be one pipeline for running jobs based on the Stack Builder
           # and one pipeline for running short lived commands.
           if [[ ${{ inputs.USE_STACK_BUILDER }} == "true" ]]; then
-            echo "CODE_PIPELINE_NAME=deployment-pipeline" >> $GITHUB_OUTPUT
+            echo "CODE_PIPELINE_NAME=Deployment-Pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_stack_builder_template.yaml" >> $GITHUB_OUTPUT
             # TODO add StackBuilder Code Pipeline parameters
           else
-            echo "CODE_PIPELINE_NAME=shared-pipeline" >> $GITHUB_OUTPUT
+            echo "CODE_PIPELINE_NAME=Shared-Pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_template.yaml" >> $GITHUB_OUTPUT
           fi
 

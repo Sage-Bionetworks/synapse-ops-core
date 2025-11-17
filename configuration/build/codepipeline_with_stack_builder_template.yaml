@@ -118,6 +118,7 @@ Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub 'Deployment-Pipeline-CodeBuildServiceRole'
       MaxSessionDuration: 28800
       AssumeRolePolicyDocument:
         Version: '2012-10-17'

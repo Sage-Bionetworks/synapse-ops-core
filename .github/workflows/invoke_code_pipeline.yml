@@ -40,7 +40,8 @@ jobs:
           if [[ ${{ inputs.USE_STACK_BUILDER }} == "true" ]]; then
             echo "CODE_PIPELINE_NAME=Deployment-Pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_stack_builder_template.yaml" >> $GITHUB_OUTPUT
-            # TODO add StackBuilder Code Pipeline parameters
+            # TODO remove the following
+            PIPELINE_PARAMETERS=${PIPELINE_PARAMETERS},Branch=PLFM-9253,RepoOwner=brucehoff
           else
             echo "CODE_PIPELINE_NAME=Shared-Pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_template.yaml" >> $GITHUB_OUTPUT

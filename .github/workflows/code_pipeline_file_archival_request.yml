@@ -1,0 +1,59 @@
+---
+name: File Archival Request
+
+on:
+  workflow_call:
+    inputs:
+      STACK:
+        required: true
+        type: string
+        description: dev or prod
+      STACK_ENDPOINT_SUFFIX:
+        required: true
+        type: string
+        description: suffix of Synapse host
+      TIMEOUT_MILLIS:
+        required: false
+        type: number
+        description: The task timeout in milliseconds
+        default: 90000
+      FILE_COUNT_LIMIT:
+        required: false
+        type: number
+        description: The maximum number of files to scan in a run
+        default: 25000
+
+jobs:
+  set-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          PIPELINE_PARAMETERS="\
+          CommandToExecute=\"scripts/file_archival_request.sh \
+          ${{ inputs.STACK }} \
+          ${{ inputs.STACK_ENDPOINT_SUFFIX }} \
+          ${{ inputs.TIMEOUT_MILLIS }} \
+          ${{ inputs.FILE_COUNT_LIMIT }}\""
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
+    outputs:
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
+
+  invoke_pipeline:
+    needs: set-up
+    uses: "./.github/workflows/invoke_code_pipeline.yml"
+    with:
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
+      USE_STACK_BUILDER: true
+    secrets: inherit
+    permissions:
+      # https://graphite.dev/guides/github-actions-permissions
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
+...

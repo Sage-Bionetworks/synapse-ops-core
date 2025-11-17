@@ -42,7 +42,7 @@ jobs:
         run: |
           PIPELINE_PARAMETERS="\
           CommandToExecute=\"scripts/build_synapse_bind_nlb_to_alb.sh \
-          ${{ inputs.STACK \"}} \
+          ${{ inputs.STACK }} \
           ${{ inputs.REPO_PROD_INSTANCE_AND_VERSION }} \
           ${{ inputs.PORTAL_PROD_INSTANCE_AND_VERSION }} \
           ${{ inputs.REPO_STAGING_INSTANCE_AND_VERSION }} \

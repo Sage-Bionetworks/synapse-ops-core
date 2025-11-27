@@ -7,7 +7,7 @@ on:
       EMAIL_ADDRESS:
         required: true
         type: string
-        description: Email Adress to unquarantine
+        description: Email Address to unquarantine
 
 env:
    RUNNER_LABEL: shared-runner

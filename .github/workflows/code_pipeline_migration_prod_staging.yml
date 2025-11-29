@@ -22,7 +22,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/migration_prod_staging.sh ${{ inputs.STACK }} src ${{ inputs.REMAIN_READ_ONLY_MODE }} ${{ inputs.SERVICE_KEY }}\""
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/migration_prod_staging.sh ${{ inputs.STACK }} ${{ inputs.REMAIN_READ_ONLY_MODE }} ${{ inputs.SERVICE_KEY }}\""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

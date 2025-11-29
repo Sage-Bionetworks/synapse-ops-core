@@ -24,7 +24,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_cdn.sh ${{ inputs.STACK }} ${{ inputs.SUBDOMAIN }} ${{ inputs.CERTIFICATE_ARN }} src\""
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_cdn.sh ${{ inputs.STACK }} ${{ inputs.SUBDOMAIN }} ${{ inputs.CERTIFICATE_ARN }} \""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

@@ -20,7 +20,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_global_resources.sh ${{ inputs.STACK }} ${{ inputs.OPS_VPC_EXPORT_PREFIX }} src\""
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_global_resources.sh ${{ inputs.STACK }} ${{ inputs.OPS_VPC_EXPORT_PREFIX }} \""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

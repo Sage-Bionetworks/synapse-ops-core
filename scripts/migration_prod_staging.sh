@@ -12,12 +12,12 @@ set +x
 # dev or prod
 STACK=${1}
 
+REMAIN_READ_ONLY_MODE=${2}
+
+SERVICE_KEY=${3}
+
 # Folder containing source code
-SRC_PATH=${2}
-
-REMAIN_READ_ONLY_MODE=${3}
-
-SERVICE_KEY=${4}
+SRC_PATH=${4}
 
 cd $SRC_PATH
 

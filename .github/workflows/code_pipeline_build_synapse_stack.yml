@@ -44,7 +44,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_stack.sh ${{ inputs.STACK }} ${{ inputs.INSTANCE }} ${{ inputs.REPO_AND_WORKERS_VERSION }} ${{ inputs.REPO_BEANSTALK_VERSION }} ${{ inputs.PORTAL_VERSION }} ${{ inputs.PORTAL_BEANSTALK_VERSION }} ${{ inputs.VPC_SUBNET_COLOR }} ${{ inputs.BEANSTALK_PLATFORM_VERSION }} src\""
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_stack.sh ${{ inputs.STACK }} ${{ inputs.INSTANCE }} ${{ inputs.REPO_AND_WORKERS_VERSION }} ${{ inputs.REPO_BEANSTALK_VERSION }} ${{ inputs.PORTAL_VERSION }} ${{ inputs.PORTAL_BEANSTALK_VERSION }} ${{ inputs.VPC_SUBNET_COLOR }} ${{ inputs.BEANSTALK_PLATFORM_VERSION }} \""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

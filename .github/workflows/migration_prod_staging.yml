@@ -68,7 +68,7 @@ jobs:
         run: >
           ${{ needs.get-env.outputs.PATH_TO_SCRIPT }}/scripts/migration_prod_staging.sh
           ${{ inputs.STACK }}
-          ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
           ${{ inputs.REMAIN_READ_ONLY_MODE }}
           ${{ inputs.SERVICE_KEY }}
+          ${{ needs.get-env.outputs.PATH_TO_SOURCE_CODE }}
 ...

@@ -205,6 +205,11 @@ Resources:
                     build:
                       commands: |
                         # Note: The script must expect the path the stack builder to be the final command parameter:
+                        # TODO remove the following debug lines
+                        echo ------------------------------------
+                        echo command to execute
+                        echo ${COMMAND_TO_EXECUTE} ${CODEBUILD_SRC_DIR_StackBuilderRepoSource}
+                        echo ------------------------------------
                         ${COMMAND_TO_EXECUTE} ${CODEBUILD_SRC_DIR_StackBuilderRepoSource}
   CodeBuildProject:
     Type: AWS::CodeBuild::Project

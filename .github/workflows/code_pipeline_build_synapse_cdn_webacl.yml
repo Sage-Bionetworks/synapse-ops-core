@@ -26,7 +26,10 @@ jobs:
     uses: "./.github/workflows/invoke_code_pipeline.yml"
     with:
       PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
-      USE_STACK_BUILDER: true
+      SECOND_REPO_NAME: Synapse-Stack-Builder
+      # TODO omit the following two lines
+      SECOND_REPO_OWNER: brucehoff
+      SECOND_REPO_BRANCH: PLFM-9253
     secrets: inherit
     permissions:
       id-token: write

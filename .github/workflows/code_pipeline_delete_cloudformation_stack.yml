@@ -27,7 +27,6 @@ jobs:
     uses: "./.github/workflows/invoke_code_pipeline.yml"
     with:
       PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
-      USE_STACK_BUILDER: false
     secrets: inherit
     permissions:
       id-token: write

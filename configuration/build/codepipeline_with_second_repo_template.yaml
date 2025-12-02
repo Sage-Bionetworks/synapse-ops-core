@@ -24,22 +24,22 @@ Parameters:
     Default: Sage-Bionetworks
     AllowedPattern: ".+"
     ConstraintDescription: Parameter cannot be empty.
-  StackBuilderRepository:
+  SecondRepoName:
     Type: String
     Default: Synapse-Stack-Builder
-    Description: Stack Builder repository name
+    Description: Secondary repository name
     AllowedPattern: ".+"
     ConstraintDescription: Parameter cannot be empty.
-  StackBuilderBranch:
+  SecondRepoBranch:
     Type: String
     Default: develop
-    Description: Branch of the StackBuilder repo to build
+    Description: Branch of the secondary repo to build
     AllowedPattern: ".+"
     ConstraintDescription: Parameter cannot be empty.
-  StackBuilderRepoOwner:
+  SecondRepoOwner:
     Type: String
     Default: Sage-Bionetworks
-    Description: Owner of the StackBuilder Repo
+    Description: Owner of the secondary repo
     AllowedPattern: ".+"
     ConstraintDescription: Parameter cannot be empty.
   GitHubToken:
@@ -153,18 +153,18 @@ Resources:
       Stages:
         - Name: CheckoutRepos
           Actions:
-            - Name: CheckoutStackBuilderRepo
+            - Name: CheckoutSecondRepo
               ActionTypeId:
                 Category: Source
                 Owner: ThirdParty
                 Provider: GitHub
                 Version: 1
               OutputArtifacts:
-                - Name: StackBuilderRepoSource
+                - Name: SecondRepoSource
               Configuration:
-                Owner: !Ref StackBuilderRepoOwner
-                Repo: !Ref StackBuilderRepository
-                Branch: !Ref StackBuilderBranch
+                Owner: !Ref SecondRepoOwner
+                Repo: !Ref SecondRepoName
+                Branch: !Ref SecondRepoBranch
                 OAuthToken: !Ref GitHubToken
                 PollForSourceChanges: false # instead we will trigger from GitHub workflow
             - Name: CheckoutOpsRepo
@@ -191,7 +191,7 @@ Resources:
                 Provider: CodeBuild
                 Version: 1
               InputArtifacts:
-                - Name: StackBuilderRepoSource
+                - Name: SecondRepoSource
                 - Name: OpsRepoSource
               OutputArtifacts:
                 - Name: OpsRepoOutput
@@ -205,12 +205,7 @@ Resources:
                     build:
                       commands: |
                         # Note: The script must expect the path the stack builder to be the final command parameter:
-                        # TODO remove the following debug lines
-                        echo ------------------------------------
-                        echo command to execute
-                        echo ${COMMAND_TO_EXECUTE} ${CODEBUILD_SRC_DIR_StackBuilderRepoSource}
-                        echo ------------------------------------
-                        ${COMMAND_TO_EXECUTE} ${CODEBUILD_SRC_DIR_StackBuilderRepoSource}
+                        ${COMMAND_TO_EXECUTE} ${CODEBUILD_SRC_DIR_SecondRepoSource}
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:

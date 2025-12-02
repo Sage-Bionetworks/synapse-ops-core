@@ -8,11 +8,20 @@ on:
         required: true
         type: string
         description: Comma separated list of Name=Value pairs to pass to Code Pipeline CF template
-      USE_STACK_BUILDER:
+      SECOND_REPO_OWNER:
         required: false
-        default: false
-        type: boolean
-        description:  set to true to check out Stack Builder and to use the designated pipeline
+        type: string
+        default: Sage-Bionetworks
+        description: Owner of optional second repository to use in build
+      SECOND_REPO_NAME:
+        required: false
+        type: string
+        description: Name of optional second repository to use in build
+      SECOND_REPO_BRANCH:
+        required: false
+        type: string
+        default: develop
+        description: Branch of optional second repository to use in build
 
 env:
    # Note synapse-ops-core is both the repository for the code-pipeline CloudFormation definition
@@ -37,11 +46,10 @@ jobs:
 
           # There will be one pipeline for running jobs based on the Stack Builder
           # and one pipeline for running short lived commands.
-          if [[ ${{ inputs.USE_STACK_BUILDER }} == "true" ]]; then
+          if [[ ${{ inputs.SECOND_REPO_NAME }} ]]; then
             echo "CODE_PIPELINE_NAME=Deployment-Pipeline" >> $GITHUB_OUTPUT
-            echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_stack_builder_template.yaml" >> $GITHUB_OUTPUT
-            # TODO remove the following
-            PIPELINE_PARAMETERS=${PIPELINE_PARAMETERS},StackBuilderBranch=PLFM-9253,StackBuilderRepoOwner=brucehoff
+            echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_second_repo_template.yaml" >> $GITHUB_OUTPUT
+            PIPELINE_PARAMETERS=${PIPELINE_PARAMETERS},SecondRepoOwner=${{ inputs.SECOND_REPO_OWNER }},SecondRepoName=${{ inputs.SECOND_REPO_NAME }},SecondRepoBranch=${{ inputs.SECOND_REPO_BRANCH }}
           else
             echo "CODE_PIPELINE_NAME=Shared-Pipeline" >> $GITHUB_OUTPUT
             echo "PATH_TO_PIPELINE=configuration/build/codepipeline_template.yaml" >> $GITHUB_OUTPUT
@@ -58,7 +66,7 @@ jobs:
 
   invoke_workflow:
     needs: set-up
-    uses: "./.github/workflows/execute_code_pipeline.yml"
+    uses: Sage-Bionetworks/Synapse-Code-Pipeline/.github/workflows/execute_code_pipeline.yml@main
     with:
       # Note the following specifies the repo' that contains the code pipeline definition
       REPOSITORY_NAME: ${{ needs.set-up.outputs.REPO_OWNER_AND_NAME }}

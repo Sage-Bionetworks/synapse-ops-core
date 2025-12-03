@@ -22,7 +22,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="BuildImage=\"aws/codebuild/amazonlinux-x86_64-standard:corretto8\",CommandToExecute=\"scripts/migration_prod_staging.sh ${{ inputs.STACK }} ${{ inputs.REMAIN_READ_ONLY_MODE }} ${{ inputs.SERVICE_KEY }}\""
+          PIPELINE_PARAMETERS="BuildImage=\"aws/codebuild/amazonlinux-x86_64-standard:corretto11\",CommandToExecute=\"scripts/migration_prod_staging.sh ${{ inputs.STACK }} ${{ inputs.REMAIN_READ_ONLY_MODE }} ${{ inputs.SERVICE_KEY }}\""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

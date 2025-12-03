@@ -33,6 +33,8 @@ jobs:
     with:
       PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
       SECOND_REPO_NAME: Synapse-Migration-Utility
+      # TODO remove the following line to revert to Sage-Bionetworks as the repo owner
+      SECOND_REPO_OWNER: brucehoff
     secrets: inherit
     permissions:
       id-token: write

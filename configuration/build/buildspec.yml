@@ -1,0 +1,8 @@
+#
+# Placeholder buildspec
+# Pipeline will not run unless buildspec.yml file is found
+#
+version: 0.2
+phases:
+  build:
+    commands: echo Not Used

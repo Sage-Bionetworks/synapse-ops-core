@@ -1,0 +1,87 @@
+---
+name: Invoke Code Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      PIPELINE_PARAMETERS:
+        required: true
+        type: string
+        description: Comma separated list of Name=Value pairs to pass to Code Pipeline CF template
+      SECOND_REPO_OWNER:
+        required: false
+        type: string
+        default: Sage-Bionetworks
+        description: Owner of optional second repository to use in build
+      SECOND_REPO_NAME:
+        required: false
+        type: string
+        description: Name of optional second repository to use in build
+      SECOND_REPO_BRANCH:
+        required: false
+        type: string
+        default: develop
+        description: Branch of optional second repository to use in build
+
+env:
+   # Note synapse-ops-core is both the repository for the code-pipeline CloudFormation definition
+   # and also the repository for the various 'ops' scripts.  So we define the following once and
+   # use them both for setting up the pipeline and for running the scripts.
+   REPOSITORY_OWNER: Sage-Bionetworks
+   REPOSITORY_NAME: synapse-ops-core
+   REPOSITORY_BRANCH: main
+jobs:
+  set-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          PIPELINE_PARAMETERS=\
+          ${{ inputs.PIPELINE_PARAMETERS }},\
+          Branch=${{ env.REPOSITORY_BRANCH }},\
+          RepoOwner=${{ env.REPOSITORY_OWNER }},\
+          Repository=${{ env.REPOSITORY_NAME }}
+
+          # There will be one pipeline for running jobs based on the Stack Builder
+          # and one pipeline for running short lived commands.
+          if [[ "${{ inputs.SECOND_REPO_NAME }}" ]]; then
+            echo "CODE_PIPELINE_NAME=Deployment-Pipeline" >> $GITHUB_OUTPUT
+            echo "PATH_TO_PIPELINE=configuration/build/codepipeline_with_second_repo_template.yaml" >> $GITHUB_OUTPUT
+            PIPELINE_PARAMETERS=${PIPELINE_PARAMETERS},SecondRepoOwner=${{ inputs.SECOND_REPO_OWNER }},SecondRepoName=${{ inputs.SECOND_REPO_NAME }},SecondRepoBranch=${{ inputs.SECOND_REPO_BRANCH }}
+          else
+            echo "CODE_PIPELINE_NAME=Shared-Pipeline" >> $GITHUB_OUTPUT
+            echo "PATH_TO_PIPELINE=configuration/build/codepipeline_template.yaml" >> $GITHUB_OUTPUT
+          fi
+
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
+
+    outputs:
+      CODE_PIPELINE_NAME: ${{ steps.pipeline-params.outputs.CODE_PIPELINE_NAME }}
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
+      PATH_TO_PIPELINE: ${{ steps.pipeline-params.outputs.PATH_TO_PIPELINE }}
+      REPO_OWNER_AND_NAME: ${{ env.REPOSITORY_OWNER }}/${{ env.REPOSITORY_NAME }}
+      REPOSITORY_BRANCH: ${{ env.REPOSITORY_BRANCH }}
+
+  invoke_workflow:
+    needs: set-up
+    uses: Sage-Bionetworks/Synapse-Code-Pipeline/.github/workflows/execute_code_pipeline.yml@main
+    with:
+      # Note the following specifies the repo' that contains the code pipeline definition
+      REPOSITORY_NAME: ${{ needs.set-up.outputs.REPO_OWNER_AND_NAME }}
+      REPOSITORY_BRANCH: ${{ needs.set-up.outputs.REPOSITORY_BRANCH }}
+      CODE_PIPELINE_CF_TEMPLATE: ${{ needs.set-up.outputs.PATH_TO_PIPELINE }}
+      PIPELINE_NAME: ${{ needs.set-up.outputs.CODE_PIPELINE_NAME }}
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
+      ROLE_TO_ASSUME: ${{ vars.ROLE_TO_ASSUME }}
+    secrets: inherit
+    permissions:
+      # https://graphite.dev/guides/github-actions-permissions
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
+...

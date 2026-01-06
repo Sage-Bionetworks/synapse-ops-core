@@ -1,0 +1,54 @@
+---
+name: Build Synapse Dev Stack (CodePipeline)
+
+on:
+  workflow_call:
+    inputs:
+      INSTANCE:
+        required: true
+        type: string
+        description: example, jmhill
+      STACK_BUILDER_OWNER:
+        required: false
+        type: string
+        default: Sage-Bionetworks
+        description: Owner of Synapse-Stack-Builder repository, defaults to Sage-Bionetworks
+      STACK_BUILDER_BRANCH:
+        required: false
+        type: string
+        default: develop
+        description: Branch of Synapse-Stack-Builder repository, defaults to develop
+
+
+jobs:
+  set-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          INSTANCE=${{ inputs.INSTANCE }}
+          ALPHA_ONLY_TRUNC_INSTANCE=$(echo "${INSTANCE//[^[:alnum:]]/}" | cut -c1-7)
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_dev_stack.sh $ALPHA_ONLY_TRUNC_INSTANCE \""
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
+    outputs:
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
+
+  invoke_pipeline:
+    needs: set-up
+    uses: "./.github/workflows/invoke_code_pipeline.yml"
+    with:
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
+      SECOND_REPO_NAME: Synapse-Stack-Builder
+      SECOND_REPO_OWNER: ${{ inputs.STACK_BUILDER_OWNER }}
+      SECOND_REPO_BRANCH: ${{ inputs.STACK_BUILDER_BRANCH }}
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
+...

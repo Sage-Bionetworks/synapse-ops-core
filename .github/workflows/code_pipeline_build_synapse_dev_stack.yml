@@ -1,5 +1,5 @@
 ---
-name: Build Synapse Stack (CodePipeline)
+name: Build Synapse Dev Stack (CodePipeline)
 
 on:
   workflow_call:
@@ -27,7 +27,7 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_stack.sh ${{ inputs.INSTANCE }} \""
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_dev_stack.sh ${{ inputs.INSTANCE }} \""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

@@ -27,7 +27,9 @@ jobs:
       - name: Determine Pipeline Parameters
         id: pipeline-params
         run: |
-          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_dev_stack.sh ${{ inputs.INSTANCE }} \""
+          INSTANCE=${{ inputs.INSTANCE }}
+          ALPHA_ONLY_TRUNC_INSTANCE=$(echo "${INSTANCE//[^[:alnum:]]/}" | cut -c1-7)
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_dev_stack.sh $ALPHA_ONLY_TRUNC_INSTANCE \""
           echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
     outputs:
       PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}

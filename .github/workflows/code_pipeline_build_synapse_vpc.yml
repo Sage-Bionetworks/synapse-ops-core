@@ -1,0 +1,80 @@
+---
+name: Deploy Synapse VPC (Code pipeline)
+
+on:
+  workflow_call:
+    inputs:
+      STACK:
+        required: true
+        type: string
+        description: dev or prod
+      VPN_CIDR:
+        required: true
+        type: string
+        description: VPN CIDR
+      VPN_CIDR_NEW:
+        required: true
+        type: string
+        description: VPN new CIDR
+      AVAILABILITY_ZONES:
+        required: true
+        type: string
+        description: Availability zones
+      SUBNET_PREFIX:
+        required: true
+        type: string
+        description: Subnet prefix
+      COLORS_CSV:
+        required: true
+        type: string
+        description: Colors CSV
+      ENDPOINTS_COLOR:
+        required: true
+        type: string
+        description: Endpoints color
+      ENDPOINTS_AVAILABILITY_ZONES:
+        required: true
+        type: string
+        description: Endpoints availability zones
+      PEERING_ACCEPT_ROLE:
+        required: true
+        type: string
+        description: Peering accept role
+
+jobs:
+  set-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Pipeline Parameters
+        id: pipeline-params
+        run: |
+          PIPELINE_PARAMETERS="CommandToExecute=\"scripts/build_synapse_vpc.sh \
+          ${{ inputs.STACK }} \
+          ${{ inputs.VPN_CIDR }} \
+          ${{ inputs.VPN_CIDR_NEW }} \
+          ${{ inputs.AVAILABILITY_ZONES }} \
+          ${{ inputs.SUBNET_PREFIX }} \
+          ${{ inputs.COLORS_CSV }} \
+          ${{ inputs.ENDPOINTS_COLOR }} \
+          ${{ inputs.ENDPOINTS_AVAILABILITY_ZONES }} \
+          ${{ inputs.PEERING_ACCEPT_ROLE }} \""
+          echo "PIPELINE_PARAMETERS=$PIPELINE_PARAMETERS" >> $GITHUB_OUTPUT
+    outputs:
+      PIPELINE_PARAMETERS: ${{ steps.pipeline-params.outputs.PIPELINE_PARAMETERS }}
+
+  invoke_pipeline:
+    needs: set-up
+    uses: "./.github/workflows/invoke_code_pipeline.yml"
+    with:
+      PIPELINE_PARAMETERS: ${{ needs.set-up.outputs.PIPELINE_PARAMETERS }}
+      SECOND_REPO_NAME: Synapse-Stack-Builder
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      deployments: write
+      security-events: write
+      statuses: write
+      actions: write
+      checks: write
+...

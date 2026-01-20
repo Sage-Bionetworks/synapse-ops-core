@@ -13,6 +13,10 @@ NAME=${1}
 IDENTITY_PROVIDER=${2}
 SYNAPSE_HOST=${3}
 
+echo NAME $NAME
+echo IDENTITY_PROVIDER $IDENTITY_PROVIDER
+echo SYNAPSE_HOST $SYNAPSE_HOST
+
 # Retrieve a personal access token for a Synapse admin user from AWS secrets manager
 ACCESS_TOKEN=`aws secretsmanager get-secret-value --secret-id /synapse/admin-pat --query SecretString --output text`
 

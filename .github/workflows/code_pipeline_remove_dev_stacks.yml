@@ -1,5 +1,5 @@
 ---
-name: File Archival Request
+name: Remove dev stacks
 
 on:
   workflow_call:
